@@ -12,7 +12,27 @@
 ## Introduction
 
 - Accroche : `[] + {}` vs `{} + []`… qui ose parier ? (on garde la réponse pour la fin)
-- Pourquoi JS est comme ça : créé en 10 jours (1995, Brendan Eich), et la règle **"don't break the web"** : on ne peut pas corriger les erreurs de départ sans casser des sites existants.
+- **Comment et pourquoi JS est né :**
+  - **1995, Netscape** veut un langage **simple** pour rendre les pages web interactives.
+  - **Brendan Eich** le crée en **10 jours**, avec une consigne : **ressembler à Java**.
+  - Le nom **JavaScript** est un choix **marketing** : il n'a presque rien à voir avec Java.
+  - **1997** : standardisé sous le nom **ECMAScript**.
+
+- **La règle "don't break the web" :**
+  - Un navigateur doit pouvoir afficher **tous les sites existants**, même ceux écrits en 1996 et jamais mis à jour.
+  - Donc une nouvelle version de JS ne peut **jamais** changer le comportement d'un code qui marche déjà.
+  - **Impacts :**
+    - Les erreurs des **premières années** (1995-1999, jusqu'à ECMAScript 3) sont **gravées dans le marbre**. En 2006, une proposition de corriger `typeof null === "object"` a été rejetée : trop de sites en dépendaient.
+    - On ne corrige pas, on **ajoute** : `===` à côté de `==`, `let`/`const` à côté de `var`, `Number.isNaN` à côté de `isNaN`, `"use strict"` en opt-in.
+    - Conséquence : le langage **ne fait que grossir**. Les nouveautés s'empilent, les pièges restent.
+- Et TypeScript dans tout ça ? Essayez l'accroche en TS :
+  ```ts
+  [] + {}
+  // ❌ error TS2365: Operator '+' cannot be applied to types 'never[]' and '{}'.
+  ```
+  TypeScript **refuse de compiler** beaucoup des exemples de cette présentation. Il comble certains manques de JavaScript en détectant ces pièges **avant l'exécution**.
+  - ⚠️ Mais TS n'est **qu'une couche de vérification** : le code compilé reste du JavaScript, avec exactement les mêmes règles à l'exécution. Par exemple, `{} + []` en début de ligne passe la compilation TS et donne toujours `0` (voir 2.7).
+  - Pour la démo, on désactive la vérification avec `// @ts-nocheck` afin de voir le vrai comportement de JS.
 - Déroulé : d'abord les bases, ensuite les bizarreries.
 
 ---
@@ -74,7 +94,6 @@ JS convertit les valeurs **automatiquement** quand un opérateur en a besoin.
 
 - `+` a **deux rôles** : addition **et** concaténation. Si un des côtés est une chaîne, il concatène.
 - `-`, `*`, `/` ne font que des maths : ils convertissent toujours en nombre.
-- `+x` (unaire) convertit `x` en nombre.
 - `!x` convertit `x` en booléen puis l'inverse.
 
 ➡️ Utile pour : 2.1 (coercition)
